@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>HangMan Game</title>
+		<style>
+			body{
+				text-align: center;
+				width: 750px;
+				height: auto;
+				border: 3px solid black;
+				margin: 20px auto;
+			}
+			#wordid {
+				border: 3px solid darkblue;
+				width: 200px;
+				height: 50px;
+				margin: 20px auto;
+			}
+			fieldset {
+				width: 678px;
+				height: 50px;
+				margin: 10px auto;
+				border: 3px solid lightpink;
+			}
+			
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+		<script>
+			let words = ['GIRAFFE', 'SNAKE', 'LION', 'TIGER', 'GORILLA', 'FOX', 'KANGAROO', 'SQUIRREL', 'CROCODILE', 'MONKEY', 'DOG', 'CAT']
+			let word = null
+			let wordArr
+			let count = 7
+			
+			function countset(){
+				$("#countId").html("남은 횟수 : "+count)
+			}
+			
+			function startNewGame() {
+					init_alphabet()
+					init_word()
+					init_event()
+					count = 7
+					countset()
+			}
+	
+			function init_word() {
+				word = words[Math.floor(Math.random() * words.length)]
+				let html = " "
+				let w = $("#wordid")
+				for (let i = 0; i < word.length; i++) {
+					html += "<span id='" + i + "''>_</span>"
+					html += " "
+				}
+				w.html(html)
+				wordArr = word.split('')
+			}
+	
+			function init_alphabet() {
+				let alphabet = $("#alphabet")
+				let html = " "
+				for (let i = 65; i <= 90; i++) {
+					html += "<button data-row='1' data-col='" + i + "'>" + String.fromCharCode(i) + "</button>"
+				}
+				alphabet.html(html)
+			}
+	
+			function init_event() {
+				$("#alphabet > button").click(function () {
+					let col = $(this).data("col")
+					if (wordArr.includes(String.fromCharCode(col))) {
+						for (let i = 0; i < wordArr.length; i++) {
+							if (wordArr[i] == String.fromCharCode(col)) {
+								$("#" + i).text(String.fromCharCode(col))		
+							}
+						}
+					}
+					else {
+						count--;
+						$("#countId").html("남은 횟수 : "+count)
+						if (count == 0) {
+							alert("당신은 바보입니까?"+" 정답은! " +word)
+							startNewGame()
+						}
+					}
+					if ($("#wordid").text().indexOf('_') == -1) {
+						alert("추카추카~ 똑똑한 사람입니다")
+						startNewGame()
+					}
+					$(this).prop("disabled", true)
+				});
+			}
+	
+			$(function () {
+				init_alphabet()
+				init_word()
+				init_event()
+				$("#countId").html("남은 횟수 : "+count)
+				countset()
+			});
+		</script>
+	</head>
+	<body>
+		<h1>🐒Hangman Game : Animal🦍</h1>
+		<div id="wordid"></div>
+		<fieldset>
+			<legend>Alphabet</legend>
+			<div id="alphabet"></div>
+		</fieldset>
+		<p id="countId"></p>
+	</body>
+</html>
